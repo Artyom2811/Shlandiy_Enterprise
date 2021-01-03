@@ -39,7 +39,7 @@ public class NewsSender {
 //                "Время от аносна новости - " + getMinuteDifferenceForNow(news.getDateTime()) + " минут(а)"
 //        );
 //        sentToTelegram(bodyOfTelegramMessage.toString());
-        sentToTelegram("Обнаружена валюта для покупки - " + news.getTicker() + newRow + "Проверте почту.");
+        sentToTelegram("Обнаружена валюта для покупки - " + news.getSource() + "(" + news.getTicker() + ")" + newRow + "Проверте почту!");
     }
 
     public static void sendErrorNotification(String subject, String textOfMessage) {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.News;
 import newsSites.BinanceService;
+import newsSites.HuobiService;
 import priceSites.CoingeckoService;
 
 import java.io.*;
@@ -21,12 +22,16 @@ public class Application {
 
         int millisecondsOfPause = Integer.parseInt(AppProperties.prop.getProperty("milliseconds.pause"));
         BinanceService binanceService = new BinanceService();
+        HuobiService huobiService = new HuobiService();
 
 //        checkLock();
 
         while (isLockApp) {
             List<News> newsFromBinance = binanceService.getNews();
             processingOfNews(newsFromBinance);
+
+            List<News> newsFromHuobi = huobiService.getNews();
+            processingOfNews(newsFromHuobi);
 
             try {
                 Thread.sleep(millisecondsOfPause);
@@ -40,8 +45,11 @@ public class Application {
 
     private static void processingOfNews(List<News> newsFromNewsSite) {
         CoingeckoService coingeckoService = new CoingeckoService();
+        List<News> newNews = new ArrayList<>();
 
-        List<News> newNews = removeCalculatedTickers(newsFromNewsSite);
+        if (newsFromNewsSite.size() > 0) {
+            newNews = removeCalculatedTickers(newsFromNewsSite.get(0).getSource(), newsFromNewsSite);
+        }
 
         for (News news : newNews) {
             System.out.println("Проверяем " + news.getTicker());
@@ -61,18 +69,18 @@ public class Application {
                 NewsSender.sendErrorNotification("Ошибка во время обработки", news.getLinkOfNews() + " - " + e.getMessage());
             }
 
-            saveCalculatedNewsInFile(news.getTicker());
+            saveCalculatedNewsInFile(news.getSource(), news.getTicker());
         }
 
         System.out.println("Обработка завершена " + LocalDateTime.now());
     }
 
-    private static List<String> getCalculatedNewsFromFile() {
+    private static List<String> getCalculatedNewsFromFile(String source) {
         ObjectMapper om = new ObjectMapper();
 
         List<String> listOfCalculatedNews = null;
         try {
-            listOfCalculatedNews = om.readValue(new File("save.json"), new TypeReference<List<String>>() {
+            listOfCalculatedNews = om.readValue(new File(source + "-save.json"), new TypeReference<List<String>>() {
             });
         } catch (IOException e) {
             listOfCalculatedNews = new ArrayList();
@@ -80,21 +88,21 @@ public class Application {
         return listOfCalculatedNews;
     }
 
-    private static void saveCalculatedNewsInFile(String newTicker) {
+    private static void saveCalculatedNewsInFile(String source, String newTicker) {
         ObjectMapper om = new ObjectMapper();
 
-        List<String> listOfCalculatedNews = getCalculatedNewsFromFile();
+        List<String> listOfCalculatedNews = getCalculatedNewsFromFile(source);
         listOfCalculatedNews.add(newTicker);
 
         try {
-            om.writeValue(new File("save.json"), listOfCalculatedNews);
+            om.writeValue(new File(source + "-save.json"), listOfCalculatedNews);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static List<News> removeCalculatedTickers(List<News> listOfNews) {
-        List<String> listOfCalculatedNews = getCalculatedNewsFromFile();
+    private static List<News> removeCalculatedTickers(String source, List<News> listOfNews) {
+        List<String> listOfCalculatedNews = getCalculatedNewsFromFile(source);
 
         List<News> newNews = new ArrayList();
 
