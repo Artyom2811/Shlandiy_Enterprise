@@ -6,6 +6,7 @@ import models.News;
 import newsSites.BinanceService;
 import newsSites.HuobiService;
 import priceSites.CoingeckoService;
+import priceSites.MarketInfoModel;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -60,7 +61,7 @@ public class Application {
                 System.out.println("У криптовалюты " + news.getTicker() + ". В периоде от "
                         + news.getDateTime().minusMinutes(10) + " до " + news.getDateTime() + " прирост " + percentOfChanges + "%");
 
-                List<String> listMarketInfo = coingeckoService.getMarketInfoByTicker(news.getTicker().toLowerCase());
+                List<MarketInfoModel> listMarketInfo = coingeckoService.getMarketInfoByTicker(news.getTicker().toLowerCase());
 
                 NewsSender.sendNewsNotification(news, percentOfChanges, listMarketInfo);
 

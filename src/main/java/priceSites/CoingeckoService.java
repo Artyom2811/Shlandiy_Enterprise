@@ -57,11 +57,11 @@ public class CoingeckoService {
         return result;
     }
 
-    public List<String> getMarketInfoByTicker(String ticker) throws Exception {
+    public List<MarketInfoModel> getMarketInfoByTicker(String ticker) throws Exception {
         String targetCodeOfCurrency = getTargetCodeOfCurrency(ticker);
 
         String answer = restService.getBodyFromGetRequest("https://api.coingecko.com/api/v3/coins/" + targetCodeOfCurrency + "?localization=false&tickers=true&market_data=false&community_data=false&developer_data=false&sparkline=false");
-        List<String> listOfMarkets = new ArrayList<>();
+        List<MarketInfoModel> listOfMarketInfo = new ArrayList<>();
 
         ObjectNode node = null;
         try {
@@ -75,13 +75,9 @@ public class CoingeckoService {
         if (node.has("tickers")) {
             a = node.get("tickers").toString();
             JacksonService jacksonService = new JacksonService();
-            List<MarketInfoModel> list = jacksonService.getMarketInfoFromJsonForCoingecko(a);
-
-            for (MarketInfoModel m : list) {
-                listOfMarkets.add("<div>" + m.getMarket().getName() + ": " + "<a href=\"" + m.getTradeUrl() + "\">" + m.getBase() + "/" + m.getTarget() + "</a></div>");
-            }
+            listOfMarketInfo = jacksonService.getMarketInfoFromJsonForCoingecko(a);
         }
-        return listOfMarkets;
+        return listOfMarketInfo;
     }
 
     private List<CoingeckoTickerModel> getListAllCodeOfCurrency() {
