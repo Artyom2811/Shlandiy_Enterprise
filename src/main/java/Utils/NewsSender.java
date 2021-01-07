@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsSender {
@@ -17,7 +18,7 @@ public class NewsSender {
     static EmailSender emailSender = new EmailSender(senderMail, senderPassword, recipientMail);
     static TelegramSender telegramSender = new TelegramSender();
 
-    static String newRow = "\n";
+    static String nextRow = "\n";
 
     public static void sendNewsNotification(News news, BigDecimal percentOfChanges, List<MarketInfoModel> listOfMarketInfo) {
 
@@ -31,41 +32,49 @@ public class NewsSender {
         }
 
         sentToMail(
-                "Обнаружена валюта для покупки - " +  news.getSource() + " - " + news.getTicker(),
+                "Обнаружена валюта для покупки - " + news.getSource() + " - " + news.getTicker(),
                 bodyOfMailMessage.toString()
         );
 
         //Telegram
-        StringBuilder bodyOfTelegramMessage = new StringBuilder(
-                "Обнаружена валюта для покупки" + newRow +
-                news.getLinkOfNews() + " " + news.getSource() + " " + news.getTicker() + newRow +
-                "прирост " + percentOfChanges + "%. " + newRow +
-                "Время от аносна новости - " + getMinuteDifferenceForNow(news.getDateTime()) + " минут(а)" + newRow
-        );
+        String headerOfTelegramMessage =
+                "Обнаружена валюта для покупки" + nextRow +
+                        news.getLinkOfNews() + " " + news.getSource() + " " + news.getTicker() + nextRow +
+                        "прирост " + percentOfChanges + "%. " + nextRow +
+                        "Время от аносна новости - " + getMinuteDifferenceForNow(news.getDateTime()) + " минут(а)" + nextRow;
+
+        List<String> listOfBodyOfTelegramMessage = new ArrayList<>();
+
+        StringBuilder tempTextForToSplit = new StringBuilder(headerOfTelegramMessage);
 
         for (MarketInfoModel e : listOfMarketInfo) {
-            bodyOfTelegramMessage.append(e.getMarket().getName() + ": " + e.getBase() + "/" + e.getTarget() + " - " + e.getTradeUrl() + newRow);
+            String newRow = e.getMarket().getName() + ": " + e.getBase() + "/" + e.getTarget() + " - " + e.getTradeUrl() + nextRow;
+
+            if ((tempTextForToSplit.length() + newRow.length()) < 4095) {
+                tempTextForToSplit.append(newRow);
+            } else {
+                listOfBodyOfTelegramMessage.add(tempTextForToSplit.toString());
+                tempTextForToSplit = new StringBuilder();
+            }
         }
 
-        sentToTelegram(bodyOfTelegramMessage.toString());
+        listOfBodyOfTelegramMessage.add(tempTextForToSplit.toString());
+
+        sentToTelegram(listOfBodyOfTelegramMessage);
 //        sentToTelegram("Обнаружена валюта для покупки - " + news.getSource() + "(" + news.getTicker() + ")" + newRow + "Проверте почту!");
     }
 
     public static void sendErrorNotification(String subject, String textOfMessage) {
         sentToMail(subject, textOfMessage);
-        sentToTelegram(textOfMessage);
+        telegramSender.send(textOfMessage);
     }
 
     static void sentToMail(String subject, String textOfMessage) {
         emailSender.send(subject, textOfMessage);
     }
 
-    static void sentToTelegram(String textOfMessage) {
-        try {
-            telegramSender.send(textOfMessage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    static void sentToTelegram(List<String> listOfPartsOfMessage) {
+        telegramSender.send(listOfPartsOfMessage);
     }
 
     private static long getMinuteDifferenceForNow(LocalDateTime startDateTime) {
