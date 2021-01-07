@@ -27,7 +27,7 @@ public class HuobiService {
             String topicOfNews = e.text();
             if (topicOfNews.contains("Will Launch")) {
                 try {
-                    String ticker = topicOfNews.split("Will Launch ")[1].split(" ")[0];
+                    String ticker = topicOfNews.split("Will Launch ")[1].split(" ")[0].replace(",", "");
                     String linkOfNews = "https://support.hbfile.net/" + e.attr("href");
 
                     listOfNews.add(new News("www.huobi.com", topicOfNews, ticker, linkOfNews, LocalDateTime.now()));
