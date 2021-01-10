@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.News;
 import newsSites.BinanceService;
+import newsSites.BitmaxService;
 import newsSites.HuobiService;
 import priceSites.CoingeckoService;
 import priceSites.MarketInfoModel;
@@ -24,6 +25,7 @@ public class Application {
         int millisecondsOfPause = Integer.parseInt(AppProperties.prop.getProperty("milliseconds.pause"));
         BinanceService binanceService = new BinanceService();
         HuobiService huobiService = new HuobiService();
+        BitmaxService bitmaxService = new BitmaxService();
 
 //        checkLock();
 
@@ -33,6 +35,9 @@ public class Application {
 
             List<News> newsFromHuobi = huobiService.getNews();
             processingOfNews(newsFromHuobi);
+
+            List<News> newsFromBitmax = bitmaxService.getNews();
+            processingOfNews(newsFromBitmax);
 
             try {
                 Thread.sleep(millisecondsOfPause);

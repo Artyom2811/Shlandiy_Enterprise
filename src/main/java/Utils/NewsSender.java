@@ -3,7 +3,6 @@ package Utils;
 import models.News;
 import priceSites.MarketInfoModel;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
