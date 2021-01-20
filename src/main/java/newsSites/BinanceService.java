@@ -24,20 +24,24 @@ public class BinanceService {
 
         List<News> listOfNews = new ArrayList();
 
-        for (Element e : listOfNewsLinks) {
-            String topicOfNews = e.text();
-            if (topicOfNews.contains("List")) {
-                try {
-                    String ticker = topicOfNews.split("\\(")[1].split("\\)")[0];
-                    String linkOfNews = "https://www.binance.com" + e.attr("href");
+        if (listOfNewsLinks != null) {
 
-                    LocalDateTime dateTimeOfTicker = getDateTimeOfNews(linkOfNews);
-                    listOfNews.add(new News("www.binance.com", topicOfNews, ticker, linkOfNews, dateTimeOfTicker));
-                } catch (Exception ex) {
-                    System.out.println("Ошибка невозможно получить данные Новости из " + topicOfNews);
+            for (Element e : listOfNewsLinks) {
+                String topicOfNews = e.text();
+                if (topicOfNews.contains("List")) {
+                    try {
+                        String ticker = topicOfNews.split("\\(")[1].split("\\)")[0];
+                        String linkOfNews = "https://www.binance.com" + e.attr("href");
+
+                        LocalDateTime dateTimeOfTicker = getDateTimeOfNews(linkOfNews);
+                        listOfNews.add(new News("www.binance.com", topicOfNews, ticker, linkOfNews, dateTimeOfTicker));
+                    } catch (Exception ex) {
+                        System.out.println("Ошибка невозможно получить данные Новости из " + topicOfNews);
+                    }
                 }
             }
         }
+
         //Информационный блок
         {
             System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Binance.");

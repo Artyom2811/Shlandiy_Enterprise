@@ -13,10 +13,12 @@ public class JsoupService {
         Document doc = null;
 
         try {
-            doc = Jsoup.connect(path).userAgent("Mozilla").get();
+            doc = Jsoup
+                    .connect(path)
+                    .userAgent("Mozilla")
+                    .get();
         } catch (IOException e) {
-            System.out.println("Error getDocument:" + e);
-            e.printStackTrace();
+            System.out.println("Ошибка при получении страницы:" + path + "\n" + e);
         }
 
         return doc;

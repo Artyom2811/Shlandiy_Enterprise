@@ -23,16 +23,19 @@ public class HuobiService {
 
         List<News> listOfNews = new ArrayList();
 
-        for (Element e : listOfNewsLinks) {
-            String topicOfNews = e.text();
-            if (topicOfNews.contains("Will Launch")) {
-                try {
-                    String ticker = topicOfNews.split("Will Launch ")[1].split(" ")[0].replace(",", "");
-                    String linkOfNews = "https://support.hbfile.net/" + e.attr("href");
+        if (listOfNewsLinks != null) {
 
-                    listOfNews.add(new News("www.huobi.com", topicOfNews, ticker, linkOfNews, LocalDateTime.now()));
-                } catch (Exception ex) {
-                    System.out.println("Ошибка невозможно получить данные Новости из " + topicOfNews);
+            for (Element e : listOfNewsLinks) {
+                String topicOfNews = e.text();
+                if (topicOfNews.contains("Will Launch")) {
+                    try {
+                        String ticker = topicOfNews.split("Will Launch ")[1].split(" ")[0].replace(",", "");
+                        String linkOfNews = "https://support.hbfile.net/" + e.attr("href");
+
+                        listOfNews.add(new News("www.huobi.com", topicOfNews, ticker, linkOfNews, LocalDateTime.now()));
+                    } catch (Exception ex) {
+                        System.out.println("Ошибка невозможно получить данные Новости из " + topicOfNews);
+                    }
                 }
             }
         }

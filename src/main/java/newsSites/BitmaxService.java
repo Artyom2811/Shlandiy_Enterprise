@@ -23,20 +23,23 @@ public class BitmaxService {
 
         List<News> listOfNews = new ArrayList();
 
-        for (Element e : listOfNewsLinks) {
-            String topicOfNews = e.text();
-            if (topicOfNews.contains("Listing")) {
-                try {
-                    String ticker = topicOfNews
-                            .replace("（", "(")
-                            .replace("）", ")")
+        if (listOfNewsLinks != null) {
 
-                            .split("\\(")[1].split("\\)")[0];
-                    String linkOfNews = "https://bitmaxhelp.zendesk.com/" + e.attr("href");
+            for (Element e : listOfNewsLinks) {
+                String topicOfNews = e.text();
+                if (topicOfNews.contains("Listing")) {
+                    try {
+                        String ticker = topicOfNews
+                                .replace("（", "(")
+                                .replace("）", ")")
 
-                    listOfNews.add(new News("www.bitmax.com", topicOfNews, ticker, linkOfNews, LocalDateTime.now()));
-                } catch (Exception ex) {
-                    System.out.println("Ошибка невозможно получить данные Новости из " + topicOfNews + " " + ex);
+                                .split("\\(")[1].split("\\)")[0];
+                        String linkOfNews = "https://bitmaxhelp.zendesk.com/" + e.attr("href");
+
+                        listOfNews.add(new News("www.bitmax.com", topicOfNews, ticker, linkOfNews, LocalDateTime.now()));
+                    } catch (Exception ex) {
+                        System.out.println("Ошибка невозможно получить данные Новости из " + topicOfNews + " " + ex);
+                    }
                 }
             }
         }

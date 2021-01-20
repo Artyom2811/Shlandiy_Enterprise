@@ -9,7 +9,7 @@ public class AppProperties {
     public static Properties prop = new Properties();
 
     static {
-        try (InputStream input = new FileInputStream("config.properties")) {
+        try (InputStream input = new FileInputStream("src/main/resources/config.properties")) {
             prop.load(input);
         } catch (IOException e) {
             e.printStackTrace();
