@@ -1,8 +1,9 @@
-package Utils;
+package util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import models.KucoinModel;
 import priceSites.CoingeckoPriceModel;
 import priceSites.CoingeckoTickerModel;
 import priceSites.MarketInfoModel;
@@ -44,6 +45,18 @@ public class JacksonService {
         }
 
         return coingeckoAnswerModel;
+    }
+
+    public List<KucoinModel> getKucoinNews(String json){
+        List<KucoinModel> kucoinNews = null;
+        try {
+            kucoinNews = om.readValue(json, new TypeReference<List<KucoinModel>>() {
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return kucoinNews;
     }
 }
 

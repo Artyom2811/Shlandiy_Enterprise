@@ -1,7 +1,7 @@
 package newsSites;
 
 import models.News;
-import Utils.JsoupService;
+import util.JsoupService;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 

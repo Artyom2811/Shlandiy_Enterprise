@@ -1,4 +1,4 @@
-package Utils;
+package util;
 
 import models.News;
 import priceSites.MarketInfoModel;

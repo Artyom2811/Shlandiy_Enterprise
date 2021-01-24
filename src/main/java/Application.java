@@ -1,11 +1,12 @@
-import Utils.AppProperties;
-import Utils.NewsSender;
+import util.AppProperties;
+import util.NewsSender;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import models.News;
 import newsSites.BinanceService;
 import newsSites.BitmaxService;
 import newsSites.HuobiService;
+import newsSites.KucoinService;
 import priceSites.CoingeckoService;
 import priceSites.MarketInfoModel;
 
@@ -26,6 +27,7 @@ public class Application {
         BinanceService binanceService = new BinanceService();
         HuobiService huobiService = new HuobiService();
         BitmaxService bitmaxService = new BitmaxService();
+        KucoinService kucoinService = new KucoinService();
 
 //        checkLock();
 
@@ -38,6 +40,9 @@ public class Application {
 
             List<News> newsFromBitmax = bitmaxService.getNews();
             processingOfNews(newsFromBitmax);
+
+            List<News> newsFromKucoin = kucoinService.getNews();
+            processingOfNews(newsFromKucoin);
 
             try {
                 Thread.sleep(millisecondsOfPause);

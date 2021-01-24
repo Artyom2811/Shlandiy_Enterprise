@@ -1,6 +1,6 @@
 package newsSites;
 
-import Utils.JsoupService;
+import util.JsoupService;
 import models.News;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

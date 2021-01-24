@@ -1,4 +1,4 @@
-package Utils;
+package util;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
