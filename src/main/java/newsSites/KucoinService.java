@@ -54,6 +54,5 @@ public class KucoinService {
 
     private String getCutBodyString(String fullBody){
         return fullBody.substring(0, fullBody.length() - 1).split("\"items\"\\:")[1];
-
     }
 }

@@ -71,7 +71,7 @@ public class Application {
                 System.out.println("У криптовалюты " + news.getTicker() + ". В периоде от "
                         + news.getDateTime().minusMinutes(10) + " до " + news.getDateTime() + " прирост " + percentOfChanges + "%");
 
-                List<MarketInfoModel> listMarketInfo = coingeckoService.getMarketInfoByTicker(news.getTicker().toLowerCase());
+                List<MarketInfoModel> listMarketInfo = coingeckoService.getMarketInfoByTicker(news);
 
                 NewsSender.sendNewsNotification(news, percentOfChanges, listMarketInfo);
 

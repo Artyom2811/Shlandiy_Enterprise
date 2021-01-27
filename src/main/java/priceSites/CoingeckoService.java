@@ -22,7 +22,7 @@ public class CoingeckoService {
     JacksonService jacksonService = new JacksonService();
 
     public BigDecimal getPercentOfChanges(News news) throws Exception {
-        String codeOfCurrency = getCoingeckoCodeOfCurrency(news.getTicker().toLowerCase());
+        String codeOfCurrency = getCoingeckoCodeOfCurrency(news);
         LocalDateTime dateOfNews = news.getDateTime();
         Long dateTimeBefore10Min = dateOfNews.minusMinutes(10).toEpochSecond(ZoneOffset.of("+3"));
 
@@ -51,14 +51,14 @@ public class CoingeckoService {
                 BigDecimal a = firstPrice.divide(lastPrice, RoundingMode.DOWN);
                 BigDecimal b = a.multiply(new BigDecimal(100));
                 result = b.subtract(new BigDecimal(100));
-            } else result =  new BigDecimal(0);
+            } else result = new BigDecimal(0);
         } else result = new BigDecimal(0);
 
         return result;
     }
 
-    public List<MarketInfoModel> getMarketInfoByTicker(String ticker) throws Exception {
-        String targetCodeOfCurrency = getTargetCodeOfCurrency(ticker);
+    public List<MarketInfoModel> getMarketInfoByTicker(News news) throws Exception {
+        String targetCodeOfCurrency = getTargetCodeOfCurrency(news);
 
         String answer = restService.getBodyFromGetRequest("https://api.coingecko.com/api/v3/coins/" + targetCodeOfCurrency + "?localization=false&tickers=true&market_data=false&community_data=false&developer_data=false&sparkline=false");
         List<MarketInfoModel> listOfMarketInfo = new ArrayList<>();
@@ -86,19 +86,26 @@ public class CoingeckoService {
         return jacksonService.getTickersFromJsonForCoingecko(g);
     }
 
-    private String getTargetCodeOfCurrency(String ticker) throws Exception {
+    private String getTargetCodeOfCurrency(News news) throws Exception {
         List<CoingeckoTickerModel> listOfTickers = getListAllCodeOfCurrency();
         String targetCodeOfCurrency = null;
         try {
-            targetCodeOfCurrency = listOfTickers.stream().filter(a -> a.getSymbol().equals(ticker)).findFirst().get().getId();
-        } catch (Exception e){
-            throw new Exception("Coingecko has not ticker:" + ticker);
+
+            CoingeckoTickerModel foundCurrency = listOfTickers.stream().filter(a -> a.getSymbol().equals(news.getTicker().toLowerCase())).findFirst().get();
+            if (news != null) {
+                if (news.getDescription().contains(foundCurrency.getName().toLowerCase())){
+                    targetCodeOfCurrency = foundCurrency.getId();
+                }else throw new Exception("The number is less than 1");
+            } else targetCodeOfCurrency = foundCurrency.getId();
+
+        } catch (Exception e) {
+            throw new Exception("Coingecko has not ticker:" + news.getTicker().toLowerCase());
         }
         return targetCodeOfCurrency;
     }
 
-    private String getCoingeckoCodeOfCurrency(String ticker) throws Exception {
-        String targetCodeOfCurrency = getTargetCodeOfCurrency(ticker);
+    private String getCoingeckoCodeOfCurrency(News news) throws Exception {
+        String targetCodeOfCurrency = getTargetCodeOfCurrency(news);
 
         Document doc = jsoupService.getDocument("https://www.coingecko.com/en/coins/" + targetCodeOfCurrency);
         String coingeckoCodeOfCurrency = doc.selectFirst("#coin_id").attr("value");

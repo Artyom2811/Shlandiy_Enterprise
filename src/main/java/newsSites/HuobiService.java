@@ -31,8 +31,10 @@ public class HuobiService {
                     try {
                         String ticker = topicOfNews.split("Will Launch ")[1].split(" ")[0].replace(",", "");
                         String linkOfNews = "https://support.hbfile.net/" + e.attr("href");
+                        String description = getDescription(linkOfNews);
 
-                        listOfNews.add(new News("www.huobi.com", topicOfNews, ticker, linkOfNews, LocalDateTime.now()));
+
+                        listOfNews.add(new News("www.huobi.com", topicOfNews, ticker, linkOfNews, description, LocalDateTime.now()));
                     } catch (Exception ex) {
                         System.out.println("Ошибка невозможно получить данные Новости из " + topicOfNews);
                     }
@@ -49,5 +51,13 @@ public class HuobiService {
         }
 
         return listOfNews;
+    }
+
+    private String getDescription(String path){
+        Document doc = jsoupService.getDocument(path);
+
+        String desc = doc.select("div.article-body").text().toLowerCase();
+//        String desc = doc.select("div.article-body>p>span[class^=ql-author-]").text().toLowerCase();
+        return desc;
     }
 }
