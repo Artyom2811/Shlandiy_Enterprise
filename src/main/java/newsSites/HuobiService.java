@@ -13,7 +13,7 @@ public class HuobiService {
     JsoupService jsoupService = new JsoupService();
 
     public List<News> getNews() {
-        List<Element> listOfNewsLinks = null;
+        List<Element> listOfNewsLinks = new ArrayList();
         try {
             Document parsedPage = jsoupService.getDocument("https://support.hbfile.net/hc/en-us/sections/360000039481-Important-Announcements?page=1#articles");
             listOfNewsLinks = parsedPage.select("a.article-list-link");

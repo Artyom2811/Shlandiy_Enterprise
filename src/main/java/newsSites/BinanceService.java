@@ -14,7 +14,7 @@ public class BinanceService {
     JsoupService jsoupService = new JsoupService();
 
     public List<News> getNews() {
-        List<Element> listOfNewsLinks = null;
+        List<Element> listOfNewsLinks = new ArrayList();
         try {
             Document parsedPage = jsoupService.getDocument("https://www.binance.com/en/support/announcement/c-48?navid=48");
             listOfNewsLinks = parsedPage.select("a.css-1neg3js");

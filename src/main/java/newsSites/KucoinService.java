@@ -14,7 +14,7 @@ public class KucoinService {
     JacksonService jacksonService = new JacksonService();
 
     public List<News> getNews() {
-        List<KucoinModel> listOfKucoinNews = null;
+        List<KucoinModel> listOfKucoinNews = new ArrayList();
         try {
             String parsedBody = restService.getBodyFromGetRequest("https://www.kucoin.com/_api/cms/articles?page=1&pageSize=10&category=listing&lang=en");
 

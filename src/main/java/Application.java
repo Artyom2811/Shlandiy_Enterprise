@@ -89,7 +89,7 @@ public class Application {
     private static List<String> getCalculatedNewsFromFile(String source) {
         ObjectMapper om = new ObjectMapper();
 
-        List<String> listOfCalculatedNews = null;
+        List<String> listOfCalculatedNews = new ArrayList();
         try {
             listOfCalculatedNews = om.readValue(new File(source + "-save.json"), new TypeReference<List<String>>() {
             });

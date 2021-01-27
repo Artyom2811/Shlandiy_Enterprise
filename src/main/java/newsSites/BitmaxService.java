@@ -13,7 +13,7 @@ public class BitmaxService {
     JsoupService jsoupService = new JsoupService();
 
     public List<News> getNews() {
-        List<Element> listOfNewsLinks = null;
+        List<Element> listOfNewsLinks = new ArrayList();
         try {
             Document parsedPage = jsoupService.getDocument("https://bitmaxhelp.zendesk.com/hc/en-us/sections/360003095033-New-Listing");
             listOfNewsLinks = parsedPage.select("a.article-list-link");

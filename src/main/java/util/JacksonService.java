@@ -8,6 +8,7 @@ import priceSites.CoingeckoPriceModel;
 import priceSites.CoingeckoTickerModel;
 import priceSites.MarketInfoModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JacksonService {
@@ -36,7 +37,7 @@ public class JacksonService {
     }
 
     public List<MarketInfoModel> getMarketInfoFromJsonForCoingecko(String json){
-        List<MarketInfoModel> coingeckoAnswerModel = null;
+        List<MarketInfoModel> coingeckoAnswerModel = new ArrayList();
         try {
             coingeckoAnswerModel = om.readValue(json, new TypeReference<List<MarketInfoModel>>() {
             });
@@ -48,7 +49,7 @@ public class JacksonService {
     }
 
     public List<KucoinModel> getKucoinNews(String json){
-        List<KucoinModel> kucoinNews = null;
+        List<KucoinModel> kucoinNews = new ArrayList();
         try {
             kucoinNews = om.readValue(json, new TypeReference<List<KucoinModel>>() {
             });

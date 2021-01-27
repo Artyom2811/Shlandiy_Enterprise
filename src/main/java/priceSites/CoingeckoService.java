@@ -70,7 +70,7 @@ public class CoingeckoService {
             e.printStackTrace();
         }
 
-        String a = null;
+        String a = "";
 
         if (node.has("tickers")) {
             a = node.get("tickers").toString();
