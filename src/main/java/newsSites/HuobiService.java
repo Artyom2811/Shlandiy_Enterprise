@@ -40,13 +40,12 @@ public class HuobiService {
                     }
                 }
             }
-        }
-
-        //Информационный блок
-        {
-            System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Huobi.");
-            for (News n : listOfNews) {
-                System.out.println(n.getTicker());
+            //Информационный блок
+            {
+                System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Huobi.");
+                for (News n : listOfNews) {
+                    System.out.println(n.getTicker());
+                }
             }
         }
 

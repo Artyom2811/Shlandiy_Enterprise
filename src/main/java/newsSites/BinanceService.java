@@ -40,13 +40,12 @@ public class BinanceService {
                     }
                 }
             }
-        }
-
-        //Информационный блок
-        {
-            System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Binance.");
-            for (News n : listOfNews) {
-                System.out.println(n.getTicker());
+            //Информационный блок
+            {
+                System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Binance.");
+                for (News n : listOfNews) {
+                    System.out.println(n.getTicker());
+                }
             }
         }
 

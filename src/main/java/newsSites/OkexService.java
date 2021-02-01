@@ -39,13 +39,12 @@ public class OkexService {
                     }
                 }
             }
-        }
-
-        //Информационный блок
-        {
-            System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Okex.");
-            for (News n : listOfNews) {
-                System.out.println(n.getTicker());
+            //Информационный блок
+            {
+                System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Okex.");
+                for (News n : listOfNews) {
+                    System.out.println(n.getTicker());
+                }
             }
         }
 

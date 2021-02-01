@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CoingeckoService {
     JsoupService jsoupService = new JsoupService();
@@ -64,18 +65,15 @@ public class CoingeckoService {
         List<MarketInfoModel> listOfMarketInfo = new ArrayList<>();
 
         ObjectNode node = null;
-        try {
-            node = new ObjectMapper().readValue(answer, ObjectNode.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
 
-        String a = "";
+        node = new ObjectMapper().readValue(answer, ObjectNode.class);
+
+        String ticker = "";
 
         if (node.has("tickers")) {
-            a = node.get("tickers").toString();
+            ticker = node.get("tickers").toString();
             JacksonService jacksonService = new JacksonService();
-            listOfMarketInfo = jacksonService.getMarketInfoFromJsonForCoingecko(a);
+            listOfMarketInfo = jacksonService.getMarketInfoFromJsonForCoingecko(ticker);
         }
         return listOfMarketInfo;
     }
@@ -89,18 +87,21 @@ public class CoingeckoService {
     private String getTargetCodeOfCurrency(News news) throws Exception {
         List<CoingeckoTickerModel> listOfTickers = getListAllCodeOfCurrency();
         String targetCodeOfCurrency = null;
-        try {
 
-            CoingeckoTickerModel foundCurrency = listOfTickers.stream().filter(a -> a.getSymbol().equals(news.getTicker().toLowerCase())).findFirst().get();
-            if (news != null) {
-                if (news.getDescription().contains(foundCurrency.getName().toLowerCase())){
-                    targetCodeOfCurrency = foundCurrency.getId();
-                }else throw new Exception("The number is less than 1");
-            } else targetCodeOfCurrency = foundCurrency.getId();
+        List<CoingeckoTickerModel> foundCurrency = listOfTickers.stream().filter(a -> a.getSymbol().equals(news.getTicker().toLowerCase())).collect(Collectors.toList());
 
-        } catch (Exception e) {
-            throw new Exception("Coingecko has not ticker:" + news.getTicker().toLowerCase());
-        }
+        if (foundCurrency.isEmpty()) throw new Exception("На Coingecko нет валюты " + news.getTicker());
+        if (foundCurrency.size() > 1)
+            throw new Exception("На Coingecko есть несколько похожих валюты " + foundCurrency);
+
+        CoingeckoTickerModel relevantCurrency = foundCurrency.get(0);
+
+        if (news.getDescription() != null) {
+            if (news.getDescription().contains(relevantCurrency.getName().toLowerCase())) {
+                targetCodeOfCurrency = relevantCurrency.getId();
+            } else throw new Exception("Описание валюты не содержит Ticker");
+        } else targetCodeOfCurrency = relevantCurrency.getId();
+
         return targetCodeOfCurrency;
     }
 

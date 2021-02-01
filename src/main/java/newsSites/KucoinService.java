@@ -39,13 +39,12 @@ public class KucoinService {
                     System.out.println("Ошибка невозможно получить данные Новости из " + e.getTitle());
                 }
             }
-        }
-
-        //Информационный блок
-        {
-            System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Kucoin.");
-            for (News n : listOfNews) {
-                System.out.println(n.getTicker());
+            //Информационный блок
+            {
+                System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Kucoin.");
+                for (News n : listOfNews) {
+                    System.out.println(n.getTicker());
+                }
             }
         }
 
