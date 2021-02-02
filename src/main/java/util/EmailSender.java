@@ -40,7 +40,7 @@ public class EmailSender {
             //тема сообщения
             message.setSubject(subject);
             //текст
-            message.setContent(text, "text/html");
+            message.setContent(text, "text/html;charset=utf-8");
 //            message.setText(text);
 
             //отправляем сообщение

@@ -23,8 +23,8 @@ public class NewsSender {
 
         //Email
         StringBuilder bodyOfMailMessage = new StringBuilder("<span><a href='" + news.getLinkOfNews() + "'>" +
-                news.getSource() + "</a></span>" + "<span> - " + news.getTicker() + " - prirost - " +
-                percentOfChanges + "%. " + "Vremya ot anonsa novosty - " + getMinuteDifferenceForNow(news.getDateTime()) + " minute </span>");
+                news.getSource() + "</a></span>" + "<span> - " + news.getTicker() + " - прирост - " +
+                percentOfChanges + "%. " + "Время от аннонса новости - " + getMinuteDifferenceForNow(news.getDateTime()) + " минут </span>");
 
         for (MarketInfoModel e : listOfMarketInfo) {
             bodyOfMailMessage.append("<div>" + e.getMarket().getName() + ": " + "<a href=\"" + e.getTradeUrl() + "\">" + e.getBase() + "/" + e.getTarget() + "</a></div>" + "\n");
