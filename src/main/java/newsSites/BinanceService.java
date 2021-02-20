@@ -17,7 +17,7 @@ public class BinanceService {
         List<Element> listOfNewsLinks = new ArrayList();
         try {
             Document parsedPage = jsoupService.getDocument("https://www.binance.com/en/support/announcement/c-48?navid=48");
-            listOfNewsLinks = parsedPage.select("a.css-1neg3js");
+            listOfNewsLinks = parsedPage.select("a.css-1ej4hfo");
         } catch (Exception ex) {
             System.out.println("Ошибка невозможно получить Новости из Binance" + ex.getMessage());
         }
@@ -55,7 +55,7 @@ public class BinanceService {
     private LocalDateTime getDateTimeOfNews(String path) {
         Document doc = jsoupService.getDocument(path);
 
-        String dateTimeOfTicker = doc.select("div.css-f1q2g4").text();
+        String dateTimeOfTicker = doc.select("div.css-17s7mnd").text();
 
         return LocalDateTime.parse(dateTimeOfTicker, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")).plusHours(3);
     }
