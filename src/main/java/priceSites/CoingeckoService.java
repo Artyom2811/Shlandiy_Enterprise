@@ -92,7 +92,7 @@ public class CoingeckoService {
 
         if (foundCurrency.isEmpty()) throw new Exception("На Coingecko нет валюты " + news.getTicker());
         if (foundCurrency.size() > 1)
-            throw new Exception("На Coingecko есть несколько похожих валюты " + foundCurrency);
+            throw new Exception("На Coingecko есть несколько похожих валюты " + foundCurrency.stream().map(e -> e.getName()).collect(Collectors.joining(", ")));
 
         CoingeckoTickerModel relevantCurrency = foundCurrency.get(0);
 

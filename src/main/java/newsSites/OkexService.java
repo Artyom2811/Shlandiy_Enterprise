@@ -27,7 +27,7 @@ public class OkexService {
 
             for (Element e : listOfNewsLinks) {
                 String topicOfNews = e.text();
-                if (topicOfNews.contains("lists")) {
+                if (topicOfNews.toLowerCase().contains("list")) {
                     try {
                         String ticker = getTicker(topicOfNews);
 
@@ -52,12 +52,17 @@ public class OkexService {
     }
 
     private String getTicker(String topic){
-        String firstStep = topic
-                .replace("(", "")
-                .replace(")", "")
-                .split(" token")[0];
-        String[] secondStep = firstStep.split(" ");
+        String ticker = null;
 
-        return secondStep[secondStep.length - 1];
+        if (topic.contains("(")) {
+            ticker = topic.split("\\(")[1].split("\\)")[0];
+        }else if(topic.contains("asset")) {
+//            String validTopic = topic.replace("OKEx", "");
+
+            ticker = topic.split("asset ")[1].split(" ")[0];
+//            String[] firstPart = topic.split(" list")[0].split(" ");
+//            ticker = firstPart[firstPart.length - 1];
+        }
+        return ticker;
     }
 }
