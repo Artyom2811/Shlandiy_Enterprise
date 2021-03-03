@@ -57,9 +57,11 @@ public class OkexService {
         if (topic.contains("(")) {
             ticker = topic.split("\\(")[1].split("\\)")[0];
         }else if(topic.contains("asset")) {
-//            String validTopic = topic.replace("OKEx", "");
+            String validTopic = topic
+//                    .replace("OKEx", "")
+                    .replace(",", "");
 
-            ticker = topic.split("asset ")[1].split(" ")[0];
+            ticker = validTopic.split("asset ")[1].split(" ")[0];
 //            String[] firstPart = topic.split(" list")[0].split(" ");
 //            ticker = firstPart[firstPart.length - 1];
         }
