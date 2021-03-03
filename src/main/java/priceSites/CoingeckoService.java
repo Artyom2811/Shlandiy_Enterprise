@@ -3,7 +3,6 @@ package priceSites;
 import util.JacksonService;
 import util.JsoupService;
 import util.RestService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.News;
@@ -88,7 +87,7 @@ public class CoingeckoService {
         List<CoingeckoTickerModel> listOfTickers = getListAllCodeOfCurrency();
         String targetCodeOfCurrency = null;
 
-        List<CoingeckoTickerModel> foundCurrency = listOfTickers.stream().filter(a -> a.getSymbol().equals(news.getTicker().toLowerCase())).collect(Collectors.toList());
+        List<CoingeckoTickerModel> foundCurrency = listOfTickers.stream().filter(a -> a.getSymbol().toLowerCase().equals(news.getTicker().toLowerCase())).collect(Collectors.toList());
 
         if (foundCurrency.isEmpty()) throw new Exception("На Coingecko нет валюты " + news.getTicker());
         if (foundCurrency.size() > 1)
