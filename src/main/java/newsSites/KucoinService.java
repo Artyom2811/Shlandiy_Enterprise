@@ -1,6 +1,7 @@
 package newsSites;
 
 import models.KucoinModel;
+import org.apache.log4j.Logger;
 import util.JacksonService;
 import util.RestService;
 import models.News;
@@ -8,8 +9,11 @@ import models.News;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KucoinService {
+    static Logger log = Logger.getLogger(KucoinService.class.getName());
+
     RestService restService = new RestService();
     JacksonService jacksonService = new JacksonService();
 
@@ -39,15 +43,11 @@ public class KucoinService {
                     System.out.println("Ошибка невозможно получить данные Новости из " + e.getTitle());
                 }
             }
-            //Информационный блок
-            {
-                System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Kucoin.");
-                for (News n : listOfNews) {
-                    System.out.println(n.getTicker());
-                }
-            }
         }
-
+        //Информационный блок
+        {
+            log.info("Обнаруженно " + listOfNews.size() + " новости(ей) на Kucoin. (" + listOfNews.stream().map(n -> n.getTicker()).collect(Collectors.joining(", ")) + ")");
+        }
         return listOfNews;
     }
 

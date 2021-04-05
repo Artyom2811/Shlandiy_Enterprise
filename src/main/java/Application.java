@@ -1,4 +1,5 @@
 import newsSites.*;
+import org.apache.log4j.Logger;
 import util.AppProperties;
 import util.NewsSender;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -10,12 +11,13 @@ import priceSites.MarketInfoModel;
 import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Application {
+    static Logger log = Logger.getLogger(Application.class.getName());
+
     static boolean isLockApp = true;
 
     public static void main(String[] args) {
@@ -31,19 +33,21 @@ public class Application {
 
         while (isLockApp) {
             List<News> newsFromBinance = binanceService.getNews();
-            processingOfNews(newsFromBinance);
+            processingOfNews(newsFromBinance, "Binance");
 
             List<News> newsFromHuobi = huobiService.getNews();
-            processingOfNews(newsFromHuobi);
+            processingOfNews(newsFromHuobi, "Huobi");
 
             List<News> newsFromBitmax = bitmaxService.getNews();
-            processingOfNews(newsFromBitmax);
+            processingOfNews(newsFromBitmax, "Bitmax");
 
             List<News> newsFromKucoin = kucoinService.getNews();
-            processingOfNews(newsFromKucoin);
+            processingOfNews(newsFromKucoin, "Kucoin");
 
             List<News> newsFromOkex = okexService.getNews();
-            processingOfNews(newsFromOkex);
+            processingOfNews(newsFromOkex, "Okex");
+
+            log.info("Завершена обработка всех новостей");
 
             try {
                 Thread.sleep(millisecondsOfPause);
@@ -55,7 +59,7 @@ public class Application {
         }
     }
 
-    private static void processingOfNews(List<News> newsFromNewsSite) {
+    private static void processingOfNews(List<News> newsFromNewsSite, String nameOfNewsSource) {
         CoingeckoService coingeckoService = new CoingeckoService();
         List<News> newNews = new ArrayList<>();
 
@@ -84,13 +88,13 @@ public class Application {
             saveCalculatedNewsInFile(news.getSource(), news.getTicker());
         }
 
-        System.out.println("Обработка завершена " + LocalDateTime.now());
+        log.info("Завершена обработка " + nameOfNewsSource);
     }
 
     private static List<String> getCalculatedNewsFromFile(String source) {
         ObjectMapper om = new ObjectMapper();
 
-        List<String> listOfCalculatedNews = new ArrayList();
+        List<String> listOfCalculatedNews;
         try {
             listOfCalculatedNews = om.readValue(new File(source + "-save.json"), new TypeReference<List<String>>() {
             });

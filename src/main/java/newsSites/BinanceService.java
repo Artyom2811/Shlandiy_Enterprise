@@ -1,6 +1,7 @@
 package newsSites;
 
 import models.News;
+import org.apache.log4j.Logger;
 import util.JsoupService;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,8 +10,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BinanceService {
+    static Logger log = Logger.getLogger(BinanceService.class.getName());
+
     JsoupService jsoupService = new JsoupService();
 
     public List<News> getNews() {
@@ -42,10 +46,7 @@ public class BinanceService {
             }
             //Информационный блок
             {
-                System.out.println("Обнаруженно " + listOfNews.size() + " новости(ей) на Binance.");
-                for (News n : listOfNews) {
-                    System.out.println(n.getTicker());
-                }
+                log.info("Обнаруженно " + listOfNews.size() + " новости(ей) на Binance. (" + listOfNews.stream().map(e -> e.getTicker()).collect(Collectors.joining(", ")) + ")");
             }
         }
 
