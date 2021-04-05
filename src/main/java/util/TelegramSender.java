@@ -7,7 +7,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 public class TelegramSender {
-    String URL_PATTERN = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=";
+    String URL_PATTERN = "https://api.telegram.org/bot%s/sendMessage?chat_id=%s&parse_mode=HTML&text=";
     String API_TOKEN = AppProperties.prop.getProperty("telegram.api.token");
     String CHAT_ID = AppProperties.prop.getProperty("telegram.chat.id");
 

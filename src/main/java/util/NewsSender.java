@@ -37,17 +37,19 @@ public class NewsSender {
 
         //Telegram
         String headerOfTelegramMessage =
-                "Обнаружена валюта для покупки" + nextRow +
-                        news.getLinkOfNews() + " " + news.getSource() + " " + news.getTicker() + nextRow +
-                        "прирост " + percentOfChanges + "%. " + nextRow +
-                        "Время от аносна новости - " + getMinuteDifferenceForNow(news.getDateTime()) + " минут(а)" + nextRow;
+                "Обнаружена валюта для покупки на " + news.getSource() + nextRow +
+                getTelegramLinkFormat(news.getTicker(), news.getLinkOfNews()) + nextRow +
+                "прирост " + percentOfChanges + "%. " + nextRow +
+                "Время от аносна новости - " + getMinuteDifferenceForNow(news.getDateTime()) + " минут(а)" + nextRow;
 
         List<String> listOfBodyOfTelegramMessage = new ArrayList<>();
 
         StringBuilder tempTextForToSplit = new StringBuilder(headerOfTelegramMessage);
 
         for (MarketInfoModel e : listOfMarketInfo) {
-            String newRow = e.getMarket().getName() + ": " + e.getBase() + "/" + e.getTarget() + " - " + e.getTradeUrl() + nextRow;
+            String newRow = getTelegramLinkFormat(
+                    e.getMarket().getName() + ": " + e.getBase() + "/" + e.getTarget(),
+                    e.getTradeUrl()) + nextRow;
 
             if ((tempTextForToSplit.length() + newRow.length()) < 4095) {
                 tempTextForToSplit.append(newRow);
@@ -81,5 +83,9 @@ public class NewsSender {
         long f = (Duration.between(startDateTime, endDateTime).getSeconds() / 60);
 
         return f;
+    }
+
+    private static String getTelegramLinkFormat(String nameOfLink, String link){
+        return  "<a href=\"" + link + "\">" + nameOfLink + "</a>";
     }
 }
