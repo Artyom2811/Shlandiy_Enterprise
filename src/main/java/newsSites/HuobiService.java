@@ -33,7 +33,9 @@ public class HuobiService {
                 String topicOfNews = e.text();
                 if (topicOfNews.contains("Will Launch")) {
                     try {
-                        String ticker = topicOfNews.split("Will Launch ")[1].split(" ")[0].replace(",", "");
+                        String findPhrase = topicOfNews.contains("Will Launch ") ? "Will Launch " : "Will list ";
+
+                        String ticker = topicOfNews.split(findPhrase)[1].split(" ")[0].replace(",", "");
                         String linkOfNews = "https://support.hbfile.net/" + e.attr("href");
                         String description = getDescription(linkOfNews);
 
