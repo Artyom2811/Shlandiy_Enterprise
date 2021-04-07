@@ -91,14 +91,15 @@ public class CoingeckoService {
 
         if (foundCurrency.isEmpty()) throw new Exception("На Coingecko нет валюты " + news.getTicker());
         if (foundCurrency.size() > 1)
-            throw new Exception("На Coingecko есть несколько похожих валюты " + foundCurrency.stream().map(e -> e.getName()).collect(Collectors.joining(", ")));
+            throw new Exception("На Coingecko есть несколько валют с тикетом " + news.getTicker() + " - " + foundCurrency.stream().map(e -> e.getName()).collect(Collectors.joining(", ")));
 
         CoingeckoTickerModel relevantCurrency = foundCurrency.get(0);
 
         if (news.getDescription() != null) {
-            if (news.getDescription().contains(relevantCurrency.getName().toLowerCase())) {
+            String nameOfCurrency = relevantCurrency.getName().toLowerCase();
+            if (news.getDescription().contains(nameOfCurrency)) {
                 targetCodeOfCurrency = relevantCurrency.getId();
-            } else throw new Exception("Описание валюты не содержит Ticker");
+            } else throw new Exception("Описание валюты не содержит ticker:" + nameOfCurrency);
         } else targetCodeOfCurrency = relevantCurrency.getId();
 
         return targetCodeOfCurrency;

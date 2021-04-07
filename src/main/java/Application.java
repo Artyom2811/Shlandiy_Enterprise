@@ -24,7 +24,8 @@ public class Application {
 
         int millisecondsOfPause = Integer.parseInt(AppProperties.prop.getProperty("milliseconds.pause"));
         BinanceService binanceService = new BinanceService();
-        HuobiService huobiService = new HuobiService();
+//        HuobiService huobiService = new HuobiService();
+        HuobiV2Service huobiV2Service = new HuobiV2Service();
         BitmaxService bitmaxService = new BitmaxService();
         KucoinService kucoinService = new KucoinService();
         OkexService okexService = new OkexService();
@@ -35,7 +36,10 @@ public class Application {
             List<News> newsFromBinance = binanceService.getNews();
             processingOfNews(newsFromBinance, "Binance");
 
-            List<News> newsFromHuobi = huobiService.getNews();
+//            List<News> newsFromHuobi = huobiService.getNews();
+//            processingOfNews(newsFromHuobi, "Huobi");
+
+            List<News> newsFromHuobi = huobiV2Service.getNews();
             processingOfNews(newsFromHuobi, "Huobi");
 
             List<News> newsFromBitmax = bitmaxService.getNews();
